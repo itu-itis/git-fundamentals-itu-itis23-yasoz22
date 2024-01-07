@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #resimkutusu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        img {
+            max-width: 100px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        #score {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Memory Game</h1>
+    <div id="vektörfonksiyonu">
+        <img src="vektörM.svg" alt="vektör 0" onclick="ana_kontrolcü(this)">
+        <img src="vektörE.svg" alt="vektör 1" onclick="ana_kontrolcü(this)">
+        <img src="vektörL.svg" alt="vektör 2" onclick="ana_kontrolcü(this)">
+        <img src="vektörİ.svg" alt="vektör 3" onclick="ana_kontrolcü(this)">
+        <img src="vektörH.svg" alt="vektör 4" onclick="ana_kontrolcü(this)">
+    </div>
+    <button onclick="kartları_karıştır()">Start Game</button>
+    <button onclick="yeniden_başlat()">Restart Game</button>
+    <p>Score: <span id="score">0</span></p>
+
+    <script>
+        var resimler = ["vektörM.svg", "vektörE.svg", "vektörL.svg", "vektörİ.svg", "vektörH.svg"];
+        var karışmış_resimler = [];
+        var tıklanmış_resimler = [];
+        var score = 0;
+        var i = 0;
+        var beklenen_resim_dizisi = 0;
+        function kartları_karıştır() {
+            var kutu = document.getElementById('vektörfonksiyonu');
+            for (var i = kutu.children.length; i >= 0; i--) {
+                kutu.appendChild(kutu.children[Math.random() * i | 0]);
+            }
+            oyunu_başlat();
+        }
+        function oyunu_başlat() {
+            setTimeout(function() {
+                resimleri_gizle();
+            }, 2000);
+        }
+
+        function resimleri_gizle() {
+            var resimler = document.querySelectorAll('#vektörfonksiyonu img');
+            resimler.forEach(function(img) {
+                img.src = "siyah.png"; 
+            });
+        }
+        function oyunu_sıfırla() {
+            score = 0;
+            document.getElementById('score').innerText = score;
+            flippedImages = [];
+            i = 0;
+            beklenen_resim_dizisi = 0;
+            kutu = 0;
+            karışmış_resimler = [];
+        }
+        function yeniden_başlat() {
+            window.location.reload();
+        }
+function ana_kontrolcü(clickedImage) {
+    if (clickedImage.alt.endsWith(beklenen_resim_dizisi)) {
+        score += 20;
+        document.getElementById('score').innerText = score;
+        beklenen_resim_dizisi++;
+        clickedImage.style.border = "2px solid red";
+
+        if (beklenen_resim_dizisi === resimler.length) {
+            document.getElementById('score').innerText = score;
+            setTimeout(function (){
+                alert("Congratulations, you got 100 points and won the game.");
+            },300);
+            setTimeout(function () {
+                oyunu_sıfırla();
+            },500);
+        }
+    } else {
+        
+        alert("Incorrect choice, please restart and start the new game. Your score is: "+ score);
+        oyunu_sıfırla();
+    }
+}
+    </script>
+</body>
+</html>
